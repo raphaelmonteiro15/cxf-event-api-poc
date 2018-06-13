@@ -4,13 +4,13 @@ javaModule.name = 'boot'
 group 'com.test'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 10
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile project (":implementation")
+    compile project(":implementation")
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

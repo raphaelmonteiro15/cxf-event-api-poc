@@ -1,41 +1,43 @@
 package com.dataanalytic;
 
-import com.model.FormModel;
-import com.service.CustomerService;
-import com.service.SalesService;
-import com.service.SalesmanService;
+import com.features.customer.CustomerService;
+import com.features.sales.SalesService;
+import com.features.salesman.SalesmanService;
+import com.file.FileUtil;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DataAnalytic {
-    private CustomerService customerService = new CustomerService();
-    private SalesmanService salesmanService = new SalesmanService();
-    private SalesService salesService = new SalesService();
-    //private Path path = Paths.get("%HOMEPATH%/data/out/output.done.dat");
+    private CustomerService customerService;
+    private SalesmanService salesmanService;
+    private SalesService salesService;
+    private FileUtil fileUtil;
+    private static final Path path = Paths.get("%HOMEPATH%/data/out/output.done.dat");
 
-    public void formModel() {
+    public DataAnalytic() {
+        this.customerService = new CustomerService();
+        this.salesmanService = new SalesmanService();
+        this.salesService = new SalesService();
+        this.fileUtil = new FileUtil();
+    }
+
+    public void analyseResult() {
         var formModel = FormModel.builder()
                 .AmountClients(customerService.getAmountClient())
                 .AmountSalesman(salesmanService.getAmountSalesman())
                 .idMostExpensiveSale(salesService.getBestSalling())
-                .worstSalesmanEver(salesService.worstSeller())
+                .worstSalesmanEver(salesService.getWorstSaller())
                 .build();
-
-        System.out.println(customerService.getAmountClient());
-        System.out.println(salesmanService.getAmountSalesman());
-        System.out.println(salesService.getBestSalling());
-        System.out.println(salesService.worstSeller());
+        fileUtil.write(path, buildContent(formModel));
+    }
 
 
-//        try(BufferedWriter writer = Files.newBufferedWriter(path)){
-//            writer.write(formModel.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+    private String buildContent(FormModel formModel){
+        return new StringBuilder().append("Amount of customers: ").append(formModel.getAmountClients()).append("\n")
+                .append("Amount of salesman: ").append(formModel.getAmountSalesman()).append("\n")
+                .append("Best Selling: ").append(formModel.getIdMostExpensiveSale()).append("\n")
+                .append("Worst Salesman ever: ").append(formModel.getWorstSalesmanEver()).append("\n")
+                .toString();
     }
 }
