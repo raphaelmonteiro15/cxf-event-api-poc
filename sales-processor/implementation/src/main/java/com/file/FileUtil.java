@@ -1,20 +1,19 @@
 package com.file;
 
-import com.listener.FileListener;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
 import java.util.stream.Collectors;
 
 public class FileUtil {
 
-    private Set<FileListener> listeners = new HashSet<>();
+    private SubmissionPublisher<List<String>> publisher = new SubmissionPublisher<>();
 
     public FileUtil() {
     }
@@ -30,7 +29,7 @@ public class FileUtil {
         while ((watchKey = watchService.take()) != null) {
             for (WatchEvent<?> event : watchKey.pollEvents()) {
                 if (isNotTemporaryFile(event)) {
-                    notifyListeners(read(Collections.singletonList(new File(dirsPath + "/" + event.context().toString()))));
+                    publishLines(read(Collections.singletonList(new File(dirsPath + "/" + event.context().toString()))));
                 }
             }
             watchKey.reset();
@@ -56,9 +55,8 @@ public class FileUtil {
     }
 
 
-    public void notifyListeners(List<String> lines) {
-        listeners.parallelStream()
-                .forEach(ls -> ls.proccess(lines));
+    public void publishLines(List<String> lines) {
+        publisher.submit(lines);
     }
 
     public void write(Path path, String text) {
@@ -70,7 +68,7 @@ public class FileUtil {
 
     }
 
-    public void registerListeners(Set<? extends FileListener> listeners) {
-        this.listeners.addAll(listeners);
+    public void registerListeners(Set<? extends Flow.Subscriber> listeners) {
+        listeners.forEach(l -> publisher.subscribe(l));
     }
 }

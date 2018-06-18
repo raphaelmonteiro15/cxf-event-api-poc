@@ -13,7 +13,7 @@ public class DataAnalytic {
     private SalesmanService salesmanService;
     private SalesService salesService;
     private FileUtil fileUtil;
-    private static final Path path = Paths.get("%HOMEPATH%/data/out/output.done.dat");
+    //private static final Path path = Paths.get("%HOMEPATH%/data/out/output.done.dat");
 
     public DataAnalytic() {
         this.customerService = new CustomerService();
@@ -29,7 +29,9 @@ public class DataAnalytic {
                 .idMostExpensiveSale(salesService.getBestSalling())
                 .worstSalesmanEver(salesService.getWorstSaller())
                 .build();
-        fileUtil.write(path, buildContent(formModel));
+
+        System.out.println(buildContent(formModel));
+        //fileUtil.write(path, buildContent(formModel));
     }
 
 

@@ -6,7 +6,7 @@ import com.listener.FileListener;
 
 import java.util.List;
 
-public class SaleFileListener implements FileListener {
+public class SaleFileListener extends FileListener {
     private SalesData salesData;
     private DataAnalytic dataAnalytic = new DataAnalytic();
 

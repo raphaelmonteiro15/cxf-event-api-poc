@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 public class FilesInfoProcessor {
 
-    private static final Path dirsPath = Paths.get("%HOMEPATH%/data/in");
+    private static final Path dirsPath = Paths.get("./files");
     private FileUtil fileUtil;
     private DataAnalytic dataAnalytic;
     private HashSet listeners;
@@ -46,7 +46,7 @@ public class FilesInfoProcessor {
                 new File(dirsPath.getFileName().toString())
                         .listFiles((dir, name) -> name.endsWith(".dat"))));
         if (!lines.isEmpty()) {
-            fileUtil.notifyListeners(lines);
+            fileUtil.publishLines(lines);
             dataAnalytic.analyseResult();
         }
     }

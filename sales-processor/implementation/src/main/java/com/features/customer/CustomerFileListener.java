@@ -6,7 +6,7 @@ import com.parser.DefaultParser;
 
 import java.util.List;
 
-public class CustomerFileListener implements FileListener {
+public class CustomerFileListener extends FileListener {
     private static final String CUSTOMER_ID = "001";
     private DataAnalytic dataAnalytic = new DataAnalytic();
 
