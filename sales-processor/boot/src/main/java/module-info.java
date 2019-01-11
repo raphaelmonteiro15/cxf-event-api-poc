@@ -1,3 +1,0 @@
-module boot {
-    requires implementation;
-}
